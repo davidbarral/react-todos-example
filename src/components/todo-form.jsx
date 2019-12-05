@@ -1,6 +1,11 @@
 import React, { Component, createRef } from "react";
+import PropTypes from "prop-types";
 
 class TodoForm extends Component {
+  static propTypes = {
+    onAddTodo: PropTypes.func.isRequired,
+  };
+
   state = {
     task: "",
     pending: true,

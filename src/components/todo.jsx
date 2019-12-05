@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const Todo = ({ todo: { id, text, pending }, onUpdateTodo, onRemoveTodo }) => {
   const handleChange = () => onUpdateTodo(id, !pending);
@@ -15,6 +16,16 @@ const Todo = ({ todo: { id, text, pending }, onUpdateTodo, onRemoveTodo }) => {
       </span>
     </div>
   );
+};
+
+Todo.propTypes = {
+  todo: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    text: PropTypes.string.isRequired,
+    pending: PropTypes.bool.isRequired,
+  }),
+  onUpdateTodo: PropTypes.func.isRequired,
+  onRemoveTodo: PropTypes.func.isRequired,
 };
 
 export default Todo;
