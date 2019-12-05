@@ -1,21 +1,18 @@
 import React from "react";
+import Page from "./page";
+import Header from "./header";
+import Content from "./content";
+import TodoList from "./todo-list";
 
 const todos = Array.from(Array(10), (_, i) => ({ id: i, text: `Todo ${i}` }));
 
 const App = () => (
-  <>
-    <header>
-      <h1>My Todos</h1>
-    </header>
-    <main>
-      <ul>
-        {todos.map((todo, i) => (
-          <li key={i}>{todo.text}</li>
-        ))}
-      </ul>
-    </main>
-  </>
+  <Page>
+    <Header />
+    <Content>
+      <TodoList todos={todos} />
+    </Content>
+  </Page>
 );
-
 
 export default App;
