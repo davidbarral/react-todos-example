@@ -28,6 +28,12 @@ class App extends Component {
     }));
   };
 
+  handleRemoveTodo = id => {
+    this.setState(prevState => ({
+      todos: prevState.todos.filter(todo => todo.id !== id),
+    }));
+  };
+
   getCounters = () => ({
     pending: countPendingTodos(this.state.todos),
     done: countDoneTodos(this.state.todos),
@@ -40,7 +46,7 @@ class App extends Component {
       <Page>
         <Header counters={this.getCounters()} />
         <Content>
-          <TodoList todos={todos} onUpdateTodo={this.handleUpdateTodo} />
+          <TodoList todos={todos} onUpdateTodo={this.handleUpdateTodo} onRemoveTodo={this.handleRemoveTodo} />
         </Content>
       </Page>
     );
