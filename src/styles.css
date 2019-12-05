@@ -53,3 +53,12 @@ li {
   border-bottom: 1px solid #ddd;
 }
 
+.todo {
+  display: flex;
+  justify-content: space-between;
+}
+
+.todo___done {
+  text-decoration: line-through;
+}
+
