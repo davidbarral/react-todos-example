@@ -22,6 +22,12 @@ class App extends Component {
     todos: initialTodos,
   };
 
+  handleAddTodo = todo => {
+    this.setState(prevState => ({
+      todos: [{ id: new Date().getTime(), ...todo }, ...prevState.todos],
+    }));
+  };
+
   handleUpdateTodo = (id, pending) => {
     this.setState(prevState => ({
       todos: prevState.todos.map(todo => (todo.id === id ? { ...todo, pending } : todo)),
@@ -44,7 +50,7 @@ class App extends Component {
 
     return (
       <Page>
-        <Header counters={this.getCounters()} />
+        <Header counters={this.getCounters()} onAddTodo={this.handleAddTodo} />
         <Content>
           <TodoList todos={todos} onUpdateTodo={this.handleUpdateTodo} onRemoveTodo={this.handleRemoveTodo} />
         </Content>
