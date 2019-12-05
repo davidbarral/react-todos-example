@@ -1,10 +1,12 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 
 class TodoForm extends Component {
   state = {
     task: "",
     pending: true,
   };
+
+  taskRef = createRef();
 
   handleTaskChange = e => {
     this.setState({
@@ -25,13 +27,18 @@ class TodoForm extends Component {
       task: "",
       pending: true,
     });
+    this.taskRef.current.focus();
   };
+
+  componentDidMount() {
+    this.taskRef.current.focus();
+  }
 
   render() {
     const { task, pending } = this.state;
     return (
       <form className="todo-form">
-        <input type="text" value={task} placeholder="Task" onChange={this.handleTaskChange} />
+        <input ref={this.taskRef} type="text" value={task} placeholder="Task" onChange={this.handleTaskChange} />
         <label>
           <input type="checkbox" checked={!pending} onChange={this.handlePendingChange} /> done
         </label>
