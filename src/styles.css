@@ -62,3 +62,15 @@ li {
   text-decoration: line-through;
 }
 
+.remove-todo {
+  margin-left: 10px;
+  border-radius: 4px;
+}
+
+.no-todos {
+  text-align: center;
+  display: block;
+  padding: 20px;
+  margin: 0;
+}
+
