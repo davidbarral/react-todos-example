@@ -5,10 +5,10 @@ import Counters from "./counters";
 import TodoForm from "./todo-form";
 import styles from "./header.module.css";
 
-const Header = ({ counters, onAddTodo }) => (
+const Header = ({ todos, onAddTodo }) => (
   <header className={styles.Header}>
     <Title text="My Todos" />
-    <Counters counters={counters} />
+    <Counters todos={todos} />
     <TodoForm onAddTodo={onAddTodo} />
   </header>
 );

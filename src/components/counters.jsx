@@ -1,9 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const Counters = ({ counters: { pending, done } }) => (
+const count = (predicate) => (array) => array.filter(predicate).length;
+const not = (pred) => (...args) => !pred(...args);
+const pendingTodo = (todo) => todo.pending;
+const doneTodo = not(pendingTodo);
+const countPendingTodos = count(pendingTodo);
+const countDoneTodos = count(doneTodo);
+
+const Counters = ({ todos }) => (
   <div>
-    Pending: {pending} Done: {done}
+    Pending: {countPendingTodos(todos)} Done: {countDoneTodos(todos)}
   </div>
 );
 
