@@ -51,7 +51,7 @@ class App extends Component {
 
     return (
       <Theme>
-        <Page>
+        <Page title="Awesome todos!">
           <Header counters={this.getCounters()} onAddTodo={this.handleAddTodo} />
           <Content>
             <TodoList todos={todos} onUpdateTodo={this.handleUpdateTodo} onRemoveTodo={this.handleRemoveTodo} />
