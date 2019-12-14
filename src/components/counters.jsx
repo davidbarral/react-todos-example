@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { withState } from "./app-state";
 
 const count = (predicate) => (array) => array.filter(predicate).length;
 const not = (pred) => (...args) => !pred(...args);
@@ -21,4 +22,4 @@ Counters.propTypes = {
   }).isRequired,
 };
 
-export default Counters;
+export default withState(Counters);

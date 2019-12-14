@@ -1,12 +1,8 @@
 import React, { Component, createRef } from "react";
-import PropTypes from "prop-types";
 import styles from "./todo-form.module.css";
+import { withState } from "./app-state";
 
 class TodoForm extends Component {
-  static propTypes = {
-    onAddTodo: PropTypes.func.isRequired,
-  };
-
   state = {
     task: "",
     pending: true,
@@ -28,7 +24,7 @@ class TodoForm extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.onAddTodo({ text: this.state.task, pending: this.state.pending });
+    this.props.addTodo({ text: this.state.task, pending: this.state.pending });
     this.setState({
       task: "",
       pending: true,
@@ -56,4 +52,4 @@ class TodoForm extends Component {
   }
 }
 
-export default TodoForm;
+export default withState(TodoForm);
