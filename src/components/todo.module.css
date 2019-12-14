@@ -1,6 +1,12 @@
 .Todo {
   display: flex;
   justify-content: space-between;
+  padding: 1.2rem 2rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.Todo:hover {
+  background: #fea;
 }
 
 .Todo___done {
