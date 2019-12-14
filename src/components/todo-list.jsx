@@ -1,14 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Todo from "./todo";
+import styles from "./todo-list.module.css";
 
 const TodoList = ({ todos, onUpdateTodo, onRemoveTodo }) =>
   todos.length === 0 ? (
-    <p className="no-todos">No todos! well done!</p>
+    <p className={styles.NoTodos}>No todos! well done!</p>
   ) : (
-    <ul>
+    <ul className={styles.Todos}>
       {todos.map((todo, i) => (
-        <li key={i}>
+        <li className={styles.Todo} key={i}>
           <Todo todo={todo} onUpdateTodo={onUpdateTodo} onRemoveTodo={onRemoveTodo} />
         </li>
       ))}

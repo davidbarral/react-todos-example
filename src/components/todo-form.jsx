@@ -1,5 +1,6 @@
 import React, { Component, createRef } from "react";
 import PropTypes from "prop-types";
+import styles from "./todo-form.module.css";
 
 class TodoForm extends Component {
   static propTypes = {
@@ -42,12 +43,14 @@ class TodoForm extends Component {
   render() {
     const { task, pending } = this.state;
     return (
-      <form className="todo-form">
+      <form className={styles.TodoForm}>
         <input ref={this.taskRef} type="text" value={task} placeholder="Task" onChange={this.handleTaskChange} />
         <label>
           <input type="checkbox" checked={!pending} onChange={this.handlePendingChange} /> done
         </label>
-        <button onClick={this.handleSubmit}>Add</button>
+        <button className={styles.AddTodoButton} onClick={this.handleSubmit}>
+          Add
+        </button>
       </form>
     );
   }

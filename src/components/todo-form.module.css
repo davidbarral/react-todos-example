@@ -1,0 +1,13 @@
+.TodoForm {
+  margin-top: 20px;
+  display: inline-flex;
+  flex-flow: row nowrap;
+}
+
+.TodoForm * + * {
+  margin-left: 10px;
+}
+
+.AddTodoButton {
+  border-radius: 4px;
+}

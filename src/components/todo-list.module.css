@@ -1,0 +1,21 @@
+.Todos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.Todo {
+  padding: 1.2rem 2rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.Todo:hover {
+  background: #fea;
+}
+
+.NoTodos {
+  text-align: center;
+  display: block;
+  padding: 20px;
+  margin: 0;
+}

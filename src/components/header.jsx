@@ -3,9 +3,10 @@ import PropTypes from "prop-types";
 import Title from "./title";
 import Counters from "./counters";
 import TodoForm from "./todo-form";
+import styles from "./header.module.css";
 
 const Header = ({ counters, onAddTodo }) => (
-  <header>
+  <header className={styles.Header}>
     <Title text="My Todos" />
     <Counters counters={counters} />
     <TodoForm onAddTodo={onAddTodo} />

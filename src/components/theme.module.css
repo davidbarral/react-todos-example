@@ -1,0 +1,15 @@
+@import "../../node_modules/normalize.css";
+
+html {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 12pt;
+  line-height: 14pt;
+}
+
+a {
+  color: #3470cb;
+}
+
+body {
+  background: #f0f0f0;
+}

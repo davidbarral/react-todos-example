@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "classnames": "^2.2.6",
     "normalize.css": "8.0.1",
     "prettier": "1.19.1",
     "prop-types": "^15.7.2",

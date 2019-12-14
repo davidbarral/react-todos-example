@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Theme from "./theme";
 import Page from "./page";
 import Header from "./header";
 import Content from "./content";
@@ -49,12 +50,14 @@ class App extends Component {
     const { todos } = this.state;
 
     return (
-      <Page>
-        <Header counters={this.getCounters()} onAddTodo={this.handleAddTodo} />
-        <Content>
-          <TodoList todos={todos} onUpdateTodo={this.handleUpdateTodo} onRemoveTodo={this.handleRemoveTodo} />
-        </Content>
-      </Page>
+      <Theme>
+        <Page>
+          <Header counters={this.getCounters()} onAddTodo={this.handleAddTodo} />
+          <Content>
+            <TodoList todos={todos} onUpdateTodo={this.handleUpdateTodo} onRemoveTodo={this.handleRemoveTodo} />
+          </Content>
+        </Page>
+      </Theme>
     );
   }
 }

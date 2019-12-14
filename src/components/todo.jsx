@@ -1,16 +1,18 @@
 import React from "react";
 import PropTypes from "prop-types";
+import cn from "classnames";
+import styles from "./todo.module.css";
 
 const Todo = ({ todo: { id, text, pending }, onUpdateTodo, onRemoveTodo }) => {
   const handleChange = () => onUpdateTodo(id, !pending);
   const handleRemove = () => onRemoveTodo(id);
 
   return (
-    <div className="todo">
-      <span className={pending ? "todo___pending" : "todo___done"}>{text}</span>
+    <div className={styles.Todo}>
+      <span className={cn({ [styles.Todo___done]: !pending })}>{text}</span>
       <span>
         <input type="checkbox" checked={!pending} onChange={handleChange} />
-        <button className="remove-todo" onClick={handleRemove}>
+        <button className={styles.RemoveTodo} onClick={handleRemove}>
           x
         </button>
       </span>

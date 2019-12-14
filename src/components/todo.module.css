@@ -1,0 +1,14 @@
+.Todo {
+  display: flex;
+  justify-content: space-between;
+}
+
+.Todo___done {
+  text-decoration: line-through;
+}
+
+.RemoveTodo {
+  margin-left: 10px;
+  border-radius: 4px;
+}
+
