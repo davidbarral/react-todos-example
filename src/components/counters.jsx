@@ -21,6 +21,6 @@ Counters.propTypes = {
 };
 
 export default connect((state) => ({
-  pending: countPendingTodos(state.todos),
-  done: countDoneTodos(state.todos),
+  pending: countPendingTodos(state.todos.data),
+  done: countDoneTodos(state.todos.data),
 }))(Counters);

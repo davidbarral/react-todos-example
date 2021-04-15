@@ -6,3 +6,15 @@
   min-height: 100vh;
   margin: 0 auto;
 }
+
+.Loader {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Loader__error {
+  color: red;
+}

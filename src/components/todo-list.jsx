@@ -14,7 +14,7 @@ const ChangeStateButton = ({ pending, onClick }) => (
 const TodoList = () => (
   <Connect
     mapStateToProps={(state) => ({
-      todos: state.todos,
+      todos: state.todos.data,
     })}
     mapDispatchToProps={(dispatch) => ({
       updateTodo: (id, pending) => dispatch(updateTodo(id, { pending })),

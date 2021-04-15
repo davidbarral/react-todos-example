@@ -6,19 +6,29 @@ const StateContext = createContext({});
 class StateProvider extends Component {
   state = this.props.initialState || this.props.reducer();
 
+  static defaultProps = {
+    middleware: [],
+  };
+
+  static propTypes = {
+    reducer: PropTypes.func.isRequired,
+    middleware: PropTypes.arrayOf(PropTypes.func),
+    initialState: PropTypes.object,
+  };
+
   dispatch = (action) => {
-    this.setState((prevState) => {
-      console.group(`dispatch ${action?.type}`);
-      console.log("Action", action);
-      console.log("Previous state", prevState);
+    const composedMiddleware = this.props.middleware.reduceRight(
+      (next, middleware) => {
+        const boundMiddleware = middleware(this.dispatch);
+        return boundMiddleware(next);
+      },
+      (state, action) => this.props.reducer(state, action),
+    );
 
-      const nextState = this.props.reducer(prevState, action);
-
-      console.log("Next state", nextState);
-      console.groupEnd();
-
-      return nextState;
-    });
+    const nextState = composedMiddleware(this.state, action);
+    if (nextState) {
+      this.setState(nextState);
+    }
   };
 
   render() {
