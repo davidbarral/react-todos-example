@@ -1,6 +1,7 @@
 import React, { Component, createRef } from "react";
+import { connect } from "./state-provider";
+import { addTodo } from "../actions/todos";
 import styles from "./todo-form.module.css";
-import { withState } from "./app-state";
 
 class TodoForm extends Component {
   state = {
@@ -10,19 +11,19 @@ class TodoForm extends Component {
 
   taskRef = createRef();
 
-  handleTaskChange = e => {
+  handleTaskChange = (e) => {
     this.setState({
       task: e.target.value,
     });
   };
 
   handlePendingChange = () => {
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       pending: !prevState.pending,
     }));
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     this.props.addTodo({ text: this.state.task, pending: this.state.pending });
     this.setState({
@@ -52,4 +53,6 @@ class TodoForm extends Component {
   }
 }
 
-export default withState(TodoForm);
+export default connect(undefined, (dispatch) => ({
+  addTodo: (todo) => dispatch(addTodo(todo)),
+}))(TodoForm);

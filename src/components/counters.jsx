@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { withState } from "./app-state";
+import { connect } from "./state-provider";
 
 const count = (predicate) => (array) => array.filter(predicate).length;
 const not = (pred) => (...args) => !pred(...args);
@@ -9,17 +9,18 @@ const doneTodo = not(pendingTodo);
 const countPendingTodos = count(pendingTodo);
 const countDoneTodos = count(doneTodo);
 
-const Counters = ({ todos }) => (
+const Counters = ({ pending, done }) => (
   <div>
-    Pending: {countPendingTodos(todos)} Done: {countDoneTodos(todos)}
+    Pending: {pending} Done: {done}
   </div>
 );
 
 Counters.propTypes = {
-  counters: PropTypes.exact({
-    pending: PropTypes.number.isRequired,
-    done: PropTypes.number.isRequired,
-  }).isRequired,
+  pending: PropTypes.number.isRequired,
+  done: PropTypes.number.isRequired,
 };
 
-export default withState(Counters);
+export default connect((state) => ({
+  pending: countPendingTodos(state.todos),
+  done: countDoneTodos(state.todos),
+}))(Counters);

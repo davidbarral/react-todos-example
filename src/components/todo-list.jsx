@@ -1,7 +1,8 @@
 import React from "react";
 import Todo from "./todo";
 import List from "./list";
-import { WithState } from "./app-state.jsx";
+import { Connect } from "./state-provider";
+import { updateTodo, removeTodo } from "../actions/todos";
 import styles from "./todo-list.module.css";
 
 const ChangeStateButton = ({ pending, onClick }) => (
@@ -11,7 +12,15 @@ const ChangeStateButton = ({ pending, onClick }) => (
 );
 
 const TodoList = () => (
-  <WithState>
+  <Connect
+    mapStateToProps={(state) => ({
+      todos: state.todos,
+    })}
+    mapDispatchToProps={(dispatch) => ({
+      updateTodo: (id, pending) => dispatch(updateTodo(id, { pending })),
+      removeTodo: (id) => dispatch(removeTodo(id)),
+    })}
+  >
     {({ todos, updateTodo, removeTodo }) => (
       <List data={todos} fallback={<p className={styles.NoTodos}>No todos! well done!</p>}>
         {(todo) => (
@@ -24,7 +33,7 @@ const TodoList = () => (
         )}
       </List>
     )}
-  </WithState>
+  </Connect>
 );
 
 export default TodoList;
