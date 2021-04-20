@@ -1,58 +1,67 @@
-import React, { Component, createRef } from "react";
-import { connect } from "./state-provider";
-import { addTodo } from "../actions/todos";
+import React, { useState, useRef, useEffect } from "react";
+import { useDispatch } from "./state-provider";
+import * as actions from "../actions/todos";
 import styles from "./todo-form.module.css";
 
-class TodoForm extends Component {
-  state = {
-    task: "",
-    pending: true,
+const useAutoFocus = (ref, deps = []) => {
+  useEffect(() => {
+    ref.current.focus();
+  }, [ref, ...deps]); // eslint-disable-line react-hooks/exhaustive-deps
+};
+
+const capitalize = (str) => str.replace(/^(.)/, (m) => m.toUpperCase());
+
+const useFormState = (initialState) => {
+  const [form, setForm] = useState(initialState);
+
+  const setters = Object.keys(form).reduce(
+    (setters, key) => ({
+      ...setters,
+      [`set${capitalize(key)}`]: (v) => {
+        setForm({
+          ...form,
+          [key]: v,
+        });
+      },
+    }),
+    {},
+  );
+
+  return {
+    ...form,
+    ...setters,
   };
+};
 
-  taskRef = createRef();
+const TodoForm = () => {
+  const { task, pending, setTask, setPending } = useFormState({ task: "", pending: true });
+  const taskRef = useRef();
+  useAutoFocus(taskRef);
 
-  handleTaskChange = (e) => {
-    this.setState({
-      task: e.target.value,
-    });
-  };
+  const addTodo = useDispatch((dispatch, todo) => dispatch(actions.addTodo(todo)));
 
-  handlePendingChange = () => {
-    this.setState((prevState) => ({
-      pending: !prevState.pending,
-    }));
-  };
+  const handleTaskChange = (e) => setTask(e.target.value);
+  const handlePendingChange = () => setPending(!pending);
 
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    this.props.addTodo({ text: this.state.task, pending: this.state.pending });
-    this.setState({
-      task: "",
-      pending: true,
-    });
-    this.taskRef.current.focus();
+    addTodo({ text: task, pending });
+    setTask("");
+    setPending(true);
+    taskRef.current.focus();
   };
 
-  componentDidMount() {
-    this.taskRef.current.focus();
-  }
+  return (
+    <form className={styles.TodoForm}>
+      <input ref={taskRef} type="text" value={task} placeholder="Task" onChange={handleTaskChange} />
+      <label>
+        <input type="checkbox" checked={!pending} onChange={handlePendingChange} /> done
+      </label>
+      <button className={styles.AddTodoButton} onClick={handleSubmit}>
+        Add
+      </button>
+    </form>
+  );
+};
 
-  render() {
-    const { task, pending } = this.state;
-    return (
-      <form className={styles.TodoForm}>
-        <input ref={this.taskRef} type="text" value={task} placeholder="Task" onChange={this.handleTaskChange} />
-        <label>
-          <input type="checkbox" checked={!pending} onChange={this.handlePendingChange} /> done
-        </label>
-        <button className={styles.AddTodoButton} onClick={this.handleSubmit}>
-          Add
-        </button>
-      </form>
-    );
-  }
-}
-
-export default connect(undefined, (dispatch) => ({
-  addTodo: (todo) => dispatch(addTodo(todo)),
-}))(TodoForm);
+export default TodoForm;

@@ -1,8 +1,8 @@
 import React from "react";
 import Todo from "./todo";
 import List from "./list";
-import { Connect } from "./state-provider";
-import { updateTodo, removeTodo } from "../actions/todos";
+import { useSelector, useDispatch } from "./state-provider";
+import * as actions from "../actions/todos";
 import styles from "./todo-list.module.css";
 
 const ChangeStateButton = ({ pending, onClick }) => (
@@ -11,29 +11,23 @@ const ChangeStateButton = ({ pending, onClick }) => (
   </button>
 );
 
-const TodoList = () => (
-  <Connect
-    mapStateToProps={(state) => ({
-      todos: state.todos.data,
-    })}
-    mapDispatchToProps={(dispatch) => ({
-      updateTodo: (id, pending) => dispatch(updateTodo(id, { pending })),
-      removeTodo: (id) => dispatch(removeTodo(id)),
-    })}
-  >
-    {({ todos, updateTodo, removeTodo }) => (
-      <List data={todos} fallback={<p className={styles.NoTodos}>No todos! well done!</p>}>
-        {(todo) => (
-          <Todo
-            todo={todo}
-            changeStateButton={<ChangeStateButton />}
-            onUpdateTodo={updateTodo}
-            onRemoveTodo={removeTodo}
-          />
-        )}
-      </List>
-    )}
-  </Connect>
-);
+const TodoList = () => {
+  const todos = useSelector((state) => state.todos.data);
+  const updateTodo = useDispatch((dispatch, id, pending) => dispatch(actions.updateTodo(id, { pending })));
+  const removeTodo = useDispatch((dispatch, id) => dispatch(actions.removeTodo(id)));
+
+  return (
+    <List data={todos} fallback={<p className={styles.NoTodos}>No todos! well done!</p>}>
+      {(todo) => (
+        <Todo
+          todo={todo}
+          changeStateButton={<ChangeStateButton />}
+          onUpdateTodo={updateTodo}
+          onRemoveTodo={removeTodo}
+        />
+      )}
+    </List>
+  );
+};
 
 export default TodoList;

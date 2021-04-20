@@ -1,6 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { connect } from "./state-provider";
+import { useSelector } from "./state-provider";
 
 const count = (predicate) => (array) => array.filter(predicate).length;
 const not = (pred) => (...args) => !pred(...args);
@@ -9,18 +8,15 @@ const doneTodo = not(pendingTodo);
 const countPendingTodos = count(pendingTodo);
 const countDoneTodos = count(doneTodo);
 
-const Counters = ({ pending, done }) => (
-  <div>
-    Pending: {pending} Done: {done}
-  </div>
-);
+const Counters = () => {
+  const pending = useSelector((state) => countPendingTodos(state.todos.data));
+  const done = useSelector((state) => countDoneTodos(state.todos.data));
 
-Counters.propTypes = {
-  pending: PropTypes.number.isRequired,
-  done: PropTypes.number.isRequired,
+  return (
+    <div>
+      Pending: {pending} Done: {done}
+    </div>
+  );
 };
 
-export default connect((state) => ({
-  pending: countPendingTodos(state.todos.data),
-  done: countDoneTodos(state.todos.data),
-}))(Counters);
+export default Counters;

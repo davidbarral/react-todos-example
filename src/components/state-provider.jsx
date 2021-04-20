@@ -1,59 +1,72 @@
-import React, { Component, createContext } from "react";
+import React, { createContext, useState, useContext, useCallback, useMemo } from "react";
 import PropTypes from "prop-types";
 
-const StateContext = createContext({});
+const StateContext = createContext();
 
-class StateProvider extends Component {
-  state = this.props.initialState || this.props.reducer();
+const StateProvider = ({ reducer, initialState, middleware = [], children }) => {
+  const [state, setState] = useState(initialState || reducer());
 
-  static defaultProps = {
-    middleware: [],
-  };
-
-  static propTypes = {
-    reducer: PropTypes.func.isRequired,
-    middleware: PropTypes.arrayOf(PropTypes.func),
-    initialState: PropTypes.object,
-  };
-
-  dispatch = (action) => {
-    const composedMiddleware = this.props.middleware.reduceRight(
+  const dispatch = useCallback((action) => {
+    const composedMiddleware = middleware.reduceRight(
       (next, middleware) => {
-        const boundMiddleware = middleware(this.dispatch);
+        const boundMiddleware = middleware(dispatch);
         return boundMiddleware(next);
       },
-      (state, action) => this.props.reducer(state, action),
+      (state, action) => reducer(state, action),
     );
 
-    const nextState = composedMiddleware(this.state, action);
-    if (nextState) {
-      this.setState(nextState);
-    }
-  };
+    setState((prevState) => {
+      const nextState = composedMiddleware(prevState, action);
+      return nextState || prevState;
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  render() {
-    const api = {
-      state: this.state,
-      dispatch: this.dispatch,
-    };
+  const api = useMemo(
+    () => ({
+      state,
+      dispatch,
+    }),
+    [state, dispatch],
+  );
 
-    return <StateContext.Provider value={api}>{this.props.children}</StateContext.Provider>;
-  }
-}
+  return <StateContext.Provider value={api}>{children}</StateContext.Provider>;
+};
+
+StateProvider.propTypes = {
+  reducer: PropTypes.func.isRequired,
+  middleware: PropTypes.arrayOf(PropTypes.func),
+  initialState: PropTypes.object,
+};
 
 export default StateProvider;
 
-export const Connect = ({ mapDispatchToProps = () => {}, mapStateToProps = () => {}, children }) => (
-  <StateContext.Consumer>
-    {({ state, dispatch }) => {
-      const connectedProps = {
-        ...mapStateToProps(state),
-        ...mapDispatchToProps(dispatch, state),
-      };
-      return children(connectedProps);
-    }}
-  </StateContext.Consumer>
-);
+export const useSelector = (mapStateToProp = () => {}) => {
+  const api = useContext(StateContext);
+
+  if (!api) {
+    throw new Error("Cannot use useSelector outside a StateProvider");
+  }
+
+  const { state } = api;
+  return mapStateToProp(state);
+};
+
+export const useDispatch = (mapDispatchToProp = () => {}) => {
+  const api = useContext(StateContext);
+
+  if (!api) {
+    throw new Error("Cannot use useDispatch outside a StateProvider");
+  }
+
+  const { dispatch } = api;
+  return useCallback((...args) => mapDispatchToProp(dispatch, ...args), [mapDispatchToProp, dispatch]);
+};
+
+export const Connect = ({ mapDispatchToProps, mapStateToProps, children }) =>
+  children({
+    ...useSelector(mapStateToProps),
+    ...useDispatch(mapDispatchToProps)(),
+  });
 
 Connect.propTypes = {
   mapDispatchToProps: PropTypes.func,
@@ -61,11 +74,13 @@ Connect.propTypes = {
 };
 
 export const connect = (mapStateToProps, mapDispatchToProps) => (Comp) => {
-  const Wrapper = (props) => (
-    <Connect mapStateToProps={mapStateToProps} mapDispatchToProps={mapDispatchToProps}>
-      {(connectedProps) => <Comp {...connectedProps} {...props} />}
-    </Connect>
-  );
+  const Wrapper = (props) => {
+    const connectedProps = {
+      ...useSelector(mapStateToProps),
+      ...useDispatch(mapDispatchToProps)(),
+    };
+    return <Comp {...connectedProps} {...props} />;
+  };
 
   Wrapper.displayName = `connect(${Comp.displayName || Comp.name || "Component"})`;
 

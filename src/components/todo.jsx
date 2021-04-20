@@ -1,4 +1,4 @@
-import React, { cloneElement } from "react";
+import React, { cloneElement, memo } from "react";
 import PropTypes from "prop-types";
 import cn from "classnames";
 import styles from "./todo.module.css";
@@ -57,4 +57,4 @@ Todo.propTypes = {
   onRemoveTodo: PropTypes.func.isRequired,
 };
 
-export default Todo;
+export default memo(Todo);

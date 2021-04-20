@@ -1,33 +1,9 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import cn from "classnames";
-import { fetchTodos } from "../actions/todos";
-import { connect } from "./state-provider";
-import withTitle from "../hocs/with-title";
+import { fetchTodos as fetchTodosAction } from "../actions/todos";
+import { useSelector, useDispatch } from "./state-provider";
+import useTitle from "../hooks/use-page-title.js";
 import styles from "./page.module.css";
-
-class Page extends Component {
-  componentDidMount() {
-    this.props.fetchTodos();
-  }
-
-  render() {
-    const { loading, error, todos, children } = this.props;
-
-    if (loading) {
-      return <div className={styles.Loader}>Loading...</div>;
-    }
-
-    if (error) {
-      return <div className={cn(styles.Loader, styles.Loader__error)}>Something went wrong: {error.toString()}</div>;
-    }
-
-    if (todos === undefined) {
-      return false;
-    }
-
-    return <div className={styles.Page}>{children}</div>;
-  }
-}
 
 const delay = (n) => new Promise((resolve) => setTimeout(resolve, n));
 
@@ -40,13 +16,29 @@ const fetchTodosPromise = () =>
     })),
   );
 
-export default connect(
-  (state) => ({
-    loading: state.todos.loading,
-    error: state.todos.error,
-    todos: state.todos.data,
-  }),
-  (dispatch) => ({
-    fetchTodos: () => dispatch(fetchTodos(fetchTodosPromise)),
-  }),
-)(withTitle(Page));
+const Page = ({ title, children }) => {
+  useTitle(title);
+
+  const { loading, error, data: todos } = useSelector((state) => state.todos);
+  const fetchTodos = useDispatch((dispatch) => dispatch(fetchTodosAction(fetchTodosPromise)));
+
+  useEffect(() => {
+    fetchTodos();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (loading) {
+    return <div className={styles.Loader}>Loading...</div>;
+  }
+
+  if (error) {
+    return <div className={cn(styles.Loader, styles.Loader__error)}>Something went wrong: {error.toString()}</div>;
+  }
+
+  if (todos === undefined) {
+    return false;
+  }
+
+  return <div className={styles.Page}>{children}</div>;
+};
+
+export default Page;

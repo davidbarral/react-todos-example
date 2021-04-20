@@ -1,26 +1,10 @@
-import { Component } from "react";
+import useRemoteData from "../hooks/use-remote-data";
 import PropTypes from "prop-types";
 
-class RemoteData extends Component {
-  state = {
-    loading: true,
-    error: false,
-    data: undefined,
-  };
+const RemoteData = ({ promise, children }) => children(useRemoteData(promise));
 
-  static propTypes = {
-    promise: PropTypes.func.isRequired,
-  };
-
-  componentDidMount() {
-    Promise.resolve(this.props.promise())
-      .then((data) => this.setState({ loading: false, error: false, data }))
-      .catch((error) => this.setState({ loading: false, error }));
-  }
-
-  render() {
-    return this.props.children(this.state);
-  }
-}
+RemoteData.propTypes = {
+  promise: PropTypes.func.isRequired,
+};
 
 export default RemoteData;
